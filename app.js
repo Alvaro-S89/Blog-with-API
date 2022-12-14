@@ -11,16 +11,23 @@ const imgArray = [
 const modalTitle = document.querySelector(".modal-title");
 const modalBody = document.querySelector(".post-body");
 const userEmail = document.querySelector(".user-email");
-const editBtn = document.querySelector(".editBtn")
+const editBtn = document.querySelector(".editBtn");
+const titleModalInput = document.getElementById("titleModalInput");
+const saveChangesBtn = document.querySelector(".saveChangesBtn");
+const btnClose = document.querySelector(".btn-close");
+const modal = document.getElementById("exampleModal");
+let openedPost = {};
 let openedPostId;
 
 //listener
 window.addEventListener("load", showPosts);
-editBtn.addEventListener("click", editPost)
+editBtn.addEventListener("click", editPost);
+saveChangesBtn.addEventListener("click", saveChangesPost);
+modal.addEventListener("hidden.bs.modal", closeModal);
 
 //Funciones
 function showPosts() {
-    fetch("http://localhost:3000/posts")
+  fetch("http://localhost:3000/posts")
     .then((response) => response.json())
     .then((data) => {
       data.forEach((post) => {
@@ -49,23 +56,51 @@ function showPosts() {
 
 function changeModalInfo(e) {
   fetch(`http://localhost:3000/posts/${e.target.name}`)
-    .then(res => res.json())
+    .then((res) => res.json())
     .then((data) => {
       modalTitle.textContent = data.title;
       modalBody.textContent = data.body;
       openedPostId = data.id;
+      openedPost = {
+        userId: data.userId,
+        id: data.id,
+        title: data.title,
+        body: data.body,
+      };
+      titleModalInput.value = data.title;
       fetch(`http://localhost:3000/users/${data.userId}`)
-        .then(res => res.json())
+        .then((res) => res.json())
         .then((data) => {
-            userEmail.innerHTML = `<h5>${data.username}</h5><h6>${data.email}</h6>`
-        })
+          userEmail.innerHTML = `<h5>${data.username}</h5><h6>${data.email}</h6>`;
+        });
     });
 }
 
 function editPost() {
-    fetch(`http://localhost:3000/posts/${openedPostId}`)
-    .then(res => res.json())
-    .then((data) => {
-        console.log(data)
-    })
+  titleModalInput.disabled = false;
+  saveChangesBtn.className = "btn btn-secondary saveChangesBtn visible";
+  editBtn.className = "btn btn-secondary editBtn disabled";
+}
+
+function saveChangesPost() {
+  let newTitle = titleModalInput.value;
+  fetch(`http://localhost:3000/posts/${openedPostId}`, {
+    method: "PUT",
+    body: JSON.stringify({
+      ...openedPost,
+      title: newTitle,
+    }),
+    headers: {
+      "content-type": "application/json",
+    },
+  });
+  titleModalInput.disabled = true;
+  saveChangesBtn.className = "btn btn-secondary saveChangesBtn invisible";
+  editBtn.className = "btn btn-secondary editBtn";
+}
+
+function closeModal() {
+  titleModalInput.disabled = true;
+  saveChangesBtn.className = "btn btn-secondary saveChangesBtn invisible";
+  editBtn.className = "btn btn-secondary editBtn";
 }

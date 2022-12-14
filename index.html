@@ -22,6 +22,7 @@
       class="modal fade"
       id="exampleModal"
       tabindex="-1"
+      data-bs-backdrop="static"
       aria-labelledby="exampleModalLabel"
       aria-hidden="true"
     >
@@ -29,6 +30,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Título del modal</h5>
+            <input type="text" id="titleModalInput" disabled="true" />
             <button
               type="button"
               class="btn-close"
@@ -36,16 +38,17 @@
               aria-label="Close"
             ></button>
           </div>
-          <div class="modal-body post-body">...</div>
+          <div class="modal-body post-body"></div>
           <div class="modal-body user-email">...</div>
           <div class="modal-footer">
             <button
               type="button"
-              class="btn btn-secondary editBtn"
+              class="btn btn-secondary saveChangesBtn invisible"
             >
-              Edit
+              Save Changes
             </button>
-            <button type="button" class="btn btn-primary">Delete</button>
+            <button type="button" class="btn btn-secondary editBtn">✎</button>
+            <button type="button" class="btn btn-secondary">🗑</button>
           </div>
         </div>
       </div>
