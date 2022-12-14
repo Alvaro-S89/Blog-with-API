@@ -9,13 +9,18 @@ const imgArray = [
   "https://i.picsum.photos/id/614/200/200.jpg?grayscale&hmac=XfA48uYoXsZ4Y4dxYObar_KcErzHP8nqiuaJ8m4VMPo",
 ];
 const modalTitle = document.querySelector(".modal-title");
-const modalBody = document.querySelector(".modal-body");
+const modalBody = document.querySelector(".post-body");
+const userEmail = document.querySelector(".user-email");
+const editBtn = document.querySelector(".editBtn")
+let openedPostId;
+
 //listener
 window.addEventListener("load", showPosts);
+editBtn.addEventListener("click", editPost)
 
 //Funciones
 function showPosts() {
-  fetch("http://localhost:3000/posts")
+    fetch("http://localhost:3000/posts")
     .then((response) => response.json())
     .then((data) => {
       data.forEach((post) => {
@@ -28,13 +33,12 @@ function showPosts() {
         let randomImg = document.createElement("img");
         randomImg.src = imgArray[Math.floor(Math.random() * 6)];
         let btn = document.createElement("button");
-        btn.className = "btn btn-dark";
+        btn.className = "btn btn-light";
         btn.setAttribute("type", "button");
         btn.setAttribute("data-bs-toggle", "modal");
         btn.setAttribute("data-bs-target", "#exampleModal");
         btn.name = post.id;
         btn.addEventListener("click", changeModalInfo);
-
         card.appendChild(randomImg);
         card.appendChild(cardTitle);
         card.appendChild(btn);
@@ -45,9 +49,23 @@ function showPosts() {
 
 function changeModalInfo(e) {
   fetch(`http://localhost:3000/posts/${e.target.name}`)
-    .then((res) => res.json())
+    .then(res => res.json())
     .then((data) => {
       modalTitle.textContent = data.title;
       modalBody.textContent = data.body;
+      openedPostId = data.id;
+      fetch(`http://localhost:3000/users/${data.userId}`)
+        .then(res => res.json())
+        .then((data) => {
+            userEmail.innerHTML = `<h5>${data.username}</h5><h6>${data.email}</h6>`
+        })
     });
+}
+
+function editPost() {
+    fetch(`http://localhost:3000/posts/${openedPostId}`)
+    .then(res => res.json())
+    .then((data) => {
+        console.log(data)
+    })
 }
