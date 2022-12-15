@@ -16,27 +16,32 @@ const titleModalInput = document.getElementById("titleModalInput");
 const saveChangesBtn = document.querySelector(".saveChangesBtn");
 const btnClose = document.querySelector(".btn-close");
 const modal = document.getElementById("exampleModal");
+const deleteBtn = document.querySelector(".deleteBtn");
 let openedPost = {};
 let openedPostId;
+let card;
 
 //listener
 window.addEventListener("load", showPosts);
 editBtn.addEventListener("click", editPost);
 saveChangesBtn.addEventListener("click", saveChangesPost);
 modal.addEventListener("hidden.bs.modal", closeModal);
+deleteBtn.addEventListener("click", deletePost);
 
 //Funciones
 function showPosts() {
-  fetch("http://localhost:3000/posts")
+    fetch("http://localhost:3000/posts")
     .then((response) => response.json())
     .then((data) => {
       data.forEach((post) => {
-        let card = document.createElement("div");
+        card = document.createElement("div");
         card.className =
           "card text-white bg-dark m-3 p-3 d-flex flex-column justify-content-between align-items-center";
+          card.setAttribute("name", post.id)
         let cardTitle = document.createElement("h6");
         cardTitle.className = "card-title mt-3 text-center";
         cardTitle.innerText = post.title;
+        cardTitle.setAttribute("name", post.id);
         let randomImg = document.createElement("img");
         randomImg.src = imgArray[Math.floor(Math.random() * 6)];
         let btn = document.createElement("button");
@@ -58,7 +63,7 @@ function changeModalInfo(e) {
   fetch(`http://localhost:3000/posts/${e.target.name}`)
     .then((res) => res.json())
     .then((data) => {
-      modalTitle.textContent = data.title;
+      modalTitle.value = data.title;
       modalBody.textContent = data.body;
       openedPostId = data.id;
       openedPost = {
@@ -94,6 +99,8 @@ function saveChangesPost() {
       "content-type": "application/json",
     },
   });
+  let titleToChange = document.querySelector(`h6[name="${openedPostId}"]`);
+  titleToChange.innerText = newTitle
   titleModalInput.disabled = true;
   saveChangesBtn.className = "btn btn-secondary saveChangesBtn invisible";
   editBtn.className = "btn btn-secondary editBtn";
@@ -104,3 +111,17 @@ function closeModal() {
   saveChangesBtn.className = "btn btn-secondary saveChangesBtn invisible";
   editBtn.className = "btn btn-secondary editBtn";
 }
+
+function deletePost() {
+    let confirmDeletePost = window.confirm("Are you sure to delete this post?");
+    let cardToDelete = document.querySelector(`div[name="${openedPostId}"]`);
+
+    if(confirmDeletePost) {
+        fetch(`http://localhost:3000/posts/${openedPostId}`, {
+        method: "DELETE",
+        headers: {
+            "content-type": "application/json",
+        },
+    })
+    mainContainer.removeChild(cardToDelete);
+}}
