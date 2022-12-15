@@ -20,16 +20,21 @@
     </nav>
     <div
       class="modal fade"
-      id="exampleModal"
+      id="postModal"
       tabindex="-1"
       data-bs-backdrop="static"
-      aria-labelledby="exampleModalLabel"
+      aria-labelledby="postModalLabel"
       aria-hidden="true"
     >
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <input type="text" class="modal-title h5" id="titleModalInput" disabled="true" />
+            <input
+              type="text"
+              class="modal-title form-control form-control-lg"
+              id="titleModalInput"
+              disabled="true"
+            />
             <button
               type="button"
               class="btn-close"
@@ -39,15 +44,43 @@
           </div>
           <div class="modal-body post-body"></div>
           <div class="modal-body user-email">...</div>
+          <div class="accordion-item p-3">
+            <h2 class="accordion-header" id="headingTwo">
+              <button
+                class="accordion-button collapsed"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapseTwo"
+                aria-expanded="false"
+                aria-controls="collapseTwo"
+              >
+                Show comments ⯆
+              </button>
+            </h2>
+            <div
+              id="collapseTwo"
+              class="accordion-collapse collapse"
+              aria-labelledby="headingTwo"
+              data-bs-parent="#accordionExample"
+            >
+              <div class="accordion-body">
+                <p>añadir comentarios</p>
+              </div>
+            </div>
+          </div>
           <div class="modal-footer">
             <button
               type="button"
-              class="btn btn-secondary saveChangesBtn invisible"
+              class="btn btn-warning saveChangesBtn invisible"
             >
               Save Changes
             </button>
-            <button type="button" class="btn btn-secondary editBtn">✎</button>
-            <button type="button" class="btn btn-secondary deleteBtn">🗑</button>
+            <button type="button" class="btn btn-outline-warning editBtn">
+              Edit
+            </button>
+            <button type="button" class="btn btn-outline-warning deleteBtn">
+              Delete
+            </button>
           </div>
         </div>
       </div>

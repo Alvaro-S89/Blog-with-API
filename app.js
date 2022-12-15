@@ -15,7 +15,7 @@ const editBtn = document.querySelector(".editBtn");
 const titleModalInput = document.getElementById("titleModalInput");
 const saveChangesBtn = document.querySelector(".saveChangesBtn");
 const btnClose = document.querySelector(".btn-close");
-const modal = document.getElementById("exampleModal");
+const modal = document.getElementById("postModal");
 const deleteBtn = document.querySelector(".deleteBtn");
 let openedPost = {};
 let openedPostId;
@@ -30,14 +30,14 @@ deleteBtn.addEventListener("click", deletePost);
 
 //Funciones
 function showPosts() {
-    fetch("http://localhost:3000/posts")
+  fetch("http://localhost:3000/posts")
     .then((response) => response.json())
     .then((data) => {
       data.forEach((post) => {
         card = document.createElement("div");
         card.className =
           "card text-white bg-dark m-3 p-3 d-flex flex-column justify-content-between align-items-center";
-          card.setAttribute("name", post.id)
+        card.setAttribute("name", post.id);
         let cardTitle = document.createElement("h6");
         cardTitle.className = "card-title mt-3 text-center";
         cardTitle.innerText = post.title;
@@ -45,10 +45,11 @@ function showPosts() {
         let randomImg = document.createElement("img");
         randomImg.src = imgArray[Math.floor(Math.random() * 6)];
         let btn = document.createElement("button");
-        btn.className = "btn btn-light btn-card";
+        btn.className = "btn btn-outline-warning btn-card py-0 px-2 mt-2";
         btn.setAttribute("type", "button");
         btn.setAttribute("data-bs-toggle", "modal");
-        btn.setAttribute("data-bs-target", "#exampleModal");
+        btn.setAttribute("data-bs-target", "#postModal");
+        btn.innerText = "+ info";
         btn.name = post.id;
         btn.addEventListener("click", changeModalInfo);
         card.appendChild(randomImg);
@@ -56,7 +57,8 @@ function showPosts() {
         card.appendChild(btn);
         mainContainer.appendChild(card);
       });
-    });
+    })
+    .catch((error) => console.error(error));
 }
 
 function changeModalInfo(e) {
@@ -77,14 +79,17 @@ function changeModalInfo(e) {
         .then((res) => res.json())
         .then((data) => {
           userEmail.innerHTML = `<h5>${data.username}</h5><h6>${data.email}</h6>`;
-        });
-    });
+        })
+        .catch((error) => console.error(error));
+    })
+    .catch((error) => console.error(error));
 }
 
 function editPost() {
   titleModalInput.disabled = false;
-  saveChangesBtn.className = "btn btn-secondary saveChangesBtn visible";
-  editBtn.className = "btn btn-secondary editBtn disabled";
+  saveChangesBtn.className = "btn btn-warning saveChangesBtn visible";
+  editBtn.className = "btn btn-ligth editBtn disabled";
+  deleteBtn.className = "btn btn-ligth editBtn disabled";
 }
 
 function saveChangesPost() {
@@ -98,30 +103,33 @@ function saveChangesPost() {
     headers: {
       "content-type": "application/json",
     },
-  });
+  }).catch((error) => console.error(error));
   let titleToChange = document.querySelector(`h6[name="${openedPostId}"]`);
-  titleToChange.innerText = newTitle
+  titleToChange.innerText = newTitle;
   titleModalInput.disabled = true;
-  saveChangesBtn.className = "btn btn-secondary saveChangesBtn invisible";
-  editBtn.className = "btn btn-secondary editBtn";
+  saveChangesBtn.className = "btn btn-warning saveChangesBtn invisible";
+  editBtn.className = "btn btn-outline-warning editBtn";
+  deleteBtn.className = "btn btn-outline-warning deleteBtn";
 }
 
 function closeModal() {
   titleModalInput.disabled = true;
   saveChangesBtn.className = "btn btn-secondary saveChangesBtn invisible";
-  editBtn.className = "btn btn-secondary editBtn";
+  editBtn.className = "btn btn-outline-warning editBtn";
+  deleteBtn.className = "btn btn-outline-warning deleteBtn";
 }
 
 function deletePost() {
-    let confirmDeletePost = window.confirm("Are you sure to delete this post?");
-    let cardToDelete = document.querySelector(`div[name="${openedPostId}"]`);
+  let confirmDeletePost = window.confirm("Are you sure to delete this post?");
+  let cardToDelete = document.querySelector(`div[name="${openedPostId}"]`);
 
-    if(confirmDeletePost) {
-        fetch(`http://localhost:3000/posts/${openedPostId}`, {
-        method: "DELETE",
-        headers: {
-            "content-type": "application/json",
-        },
-    })
+  if (confirmDeletePost) {
+    fetch(`http://localhost:3000/posts/${openedPostId}`, {
+      method: "DELETE",
+      headers: {
+        "content-type": "application/json",
+      },
+    });
     mainContainer.removeChild(cardToDelete);
-}}
+  }
+}
