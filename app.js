@@ -120,7 +120,7 @@ function closeModal() {
 }
 
 function deletePost() {
-  let confirmDeletePost = window.confirm("Are you sure to delete this post?");
+  let confirmDeletePost = confirm("Are you sure to delete this post?");
   let cardToDelete = document.querySelector(`div[name="${openedPostId}"]`);
 
   if (confirmDeletePost) {
@@ -128,8 +128,9 @@ function deletePost() {
       method: "DELETE",
       headers: {
         "content-type": "application/json",
-      },
+      }, 
     });
     mainContainer.removeChild(cardToDelete);
+    
   }
 }
