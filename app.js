@@ -17,6 +17,7 @@ const saveChangesBtn = document.querySelector(".saveChangesBtn");
 const btnClose = document.querySelector(".btn-close");
 const modal = document.getElementById("postModal");
 const deleteBtn = document.querySelector(".deleteBtn");
+const confirmDeletePost = document.querySelector(".confirmDeletePost");
 let openedPost = {};
 let openedPostId;
 let card;
@@ -26,7 +27,7 @@ window.addEventListener("load", showPosts);
 editBtn.addEventListener("click", editPost);
 saveChangesBtn.addEventListener("click", saveChangesPost);
 modal.addEventListener("hidden.bs.modal", closeModal);
-deleteBtn.addEventListener("click", deletePost);
+confirmDeletePost.addEventListener("click", deletePost);
 
 //Funciones
 function showPosts() {
@@ -120,17 +121,18 @@ function closeModal() {
 }
 
 function deletePost() {
-  let confirmDeletePost = confirm("Are you sure to delete this post?");
   let cardToDelete = document.querySelector(`div[name="${openedPostId}"]`);
 
-  if (confirmDeletePost) {
-    fetch(`http://localhost:3000/posts/${openedPostId}`, {
-      method: "DELETE",
-      headers: {
-        "content-type": "application/json",
-      }, 
-    });
-    mainContainer.removeChild(cardToDelete);
-    
-  }
+  fetch(`http://localhost:3000/posts/${openedPostId}`, {
+    method: "DELETE",
+    headers: {
+      "content-type": "application/json",
+    },
+  })
+    .then((response) => {
+      if (response.ok) {
+        mainContainer.removeChild(cardToDelete);
+      }
+    })
+    .catch((error) => console.error(error));
 }
