@@ -45,7 +45,7 @@ function showPosts() {
         let randomImg = document.createElement("img");
         randomImg.src = imgArray[Math.floor(Math.random() * 6)];
         let btn = document.createElement("button");
-        btn.className = "btn btn-light";
+        btn.className = "btn btn-light btn-card";
         btn.setAttribute("type", "button");
         btn.setAttribute("data-bs-toggle", "modal");
         btn.setAttribute("data-bs-target", "#exampleModal");
