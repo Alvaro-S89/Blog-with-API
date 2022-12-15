@@ -13,6 +13,7 @@ const modalBody = document.querySelector(".post-body");
 const userEmail = document.querySelector(".user-email");
 const editBtn = document.querySelector(".editBtn");
 const titleModalInput = document.getElementById("titleModalInput");
+const bodyModalInput = document.getElementById("bodyModalInput");
 const saveChangesBtn = document.querySelector(".saveChangesBtn");
 const btnClose = document.querySelector(".btn-close");
 const modal = document.getElementById("postModal");
@@ -88,6 +89,7 @@ function changeModalInfo(e) {
 
 function editPost() {
   titleModalInput.disabled = false;
+  bodyModalInput.disabled = false;
   saveChangesBtn.className = "btn btn-warning saveChangesBtn visible";
   editBtn.className = "btn btn-ligth editBtn disabled";
   deleteBtn.className = "btn btn-ligth editBtn disabled";
@@ -95,11 +97,13 @@ function editPost() {
 
 function saveChangesPost() {
   let newTitle = titleModalInput.value;
+  let newBody = bodyModalInput.value
   fetch(`http://localhost:3000/posts/${openedPostId}`, {
     method: "PUT",
     body: JSON.stringify({
       ...openedPost,
       title: newTitle,
+      body: newBody,
     }),
     headers: {
       "content-type": "application/json",
@@ -108,6 +112,7 @@ function saveChangesPost() {
   let titleToChange = document.querySelector(`h6[name="${openedPostId}"]`);
   titleToChange.innerText = newTitle;
   titleModalInput.disabled = true;
+  bodyModalInput.disabled = true;
   saveChangesBtn.className = "btn btn-warning saveChangesBtn invisible";
   editBtn.className = "btn btn-outline-warning editBtn";
   deleteBtn.className = "btn btn-outline-warning deleteBtn";
