@@ -10,3 +10,14 @@ body {
 img {
   width: 18rem;
 }
+
+#bodyModalInput {
+  height: 9rem;
+  font-size: 0.9rem;
+  margin: 1rem;
+  width: 92%;
+}
+#titleModalInput {
+  font-size: 1.2rem;
+  height: 1.5rem;
+}
