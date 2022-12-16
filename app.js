@@ -1,4 +1,3 @@
-//Variables
 const mainContainer = document.querySelector("main");
 const imgArray = [
   "https://i.picsum.photos/id/134/200/200.jpg?grayscale&hmac=06cZ73xS2DcfYmmDSjmbVvSGMC6_oLSnbTzLS4xR_1U",
@@ -25,18 +24,23 @@ const modal = document.getElementById("postModal");
 const deleteBtn = document.querySelector(".deleteBtn");
 const confirmDeletePost = document.querySelector(".confirmDeletePost");
 const commentSection = document.querySelector(".accordion-body");
+const collapseTwo = document.getElementById("collapseTwo");
+const accordionButton = document.querySelector(".accordion-button");
+
 let openedPost = {};
 let openedPostId;
 let card;
 
-//listener
+//listeners
 window.addEventListener("load", showPosts);
 editBtn.addEventListener("click", editPost);
 saveChangesBtn.addEventListener("click", saveChangesPost);
 modal.addEventListener("hidden.bs.modal", closeModal);
 confirmDeletePost.addEventListener("click", deletePost);
+btnClose.addEventListener("click", removeComments);
+deleteBtn.addEventListener("click", closeComments);
 
-//Funciones
+//Functions
 function showPosts() {
   fetch("http://localhost:3000/posts")
     .then((response) => response.json())
@@ -73,7 +77,6 @@ function changeModalInfo(e) {
   fetch(`http://localhost:3000/posts/${e.target.name}`)
     .then((res) => res.json())
     .then((data) => {
-      console.log(data);
       openedPostId = data.id;
       openedPost = {
         userId: data.userId,
@@ -145,7 +148,7 @@ function saveChangesPost() {
   deleteBtn.className = "btn btn-outline-warning deleteBtn";
 }
 
-function closeModal() {
+function closeModal(e) {
   titleModalInput.disabled = true;
   bodyModalInput.disabled = true;
   saveChangesBtn.className = "btn btn-secondary saveChangesBtn invisible";
@@ -165,7 +168,19 @@ function deletePost() {
     .then((response) => {
       if (response.ok) {
         mainContainer.removeChild(cardToDelete);
+        commentSection.innerHTML = "";
       }
     })
     .catch((error) => console.error(error));
+}
+
+//nuevo
+
+function removeComments() {
+  commentSection.innerHTML = "";
+  closeComments();
+}
+function closeComments() {
+  collapseTwo.classList.remove("show");
+  accordionButton.classList.add("collapsed");
 }
