@@ -174,8 +174,6 @@ function deletePost() {
     .catch((error) => console.error(error));
 }
 
-//nuevo
-
 function removeComments() {
   commentSection.innerHTML = "";
   closeComments();
